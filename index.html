@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Rishi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Lora:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --wine: #780116; 
+            --ruby: #c32f27; 
+            --gold: #d4af37; 
+            --blush: #fff0f3; 
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--blush);
+            font-family: 'Nunito', sans-serif;
+            color: var(--wine);
+            overflow-x: hidden;
+        }
+
+        /* --- AMBIENT PETALS --- */
+        #petal-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(120, 1, 22, 0.5), rgba(120, 1, 22, 0.5)), 
+                        url('https://w0.peakpx.com/wallpaper/126/873/HD-wallpaper-teddy-bear-love-stuffed-animal.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
+            color: var(--white);
+            text-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-family: 'Alex Brush', cursive;
+            font-size: 3.2rem;
+            color: var(--gold);
+        }
+
+        /* --- CHAPTERS --- */
+        .timeline {
+            max-width: 1200px;
+            margin: -100px auto 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .chapter-card {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 40px;
+            border-top: 6px solid var(--ruby);
+            text-align: center;
+            box-shadow: 0 15px 45px rgba(120, 1, 22, 0.1);
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .chapter-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            color: var(--ruby);
+            margin-bottom: 8px;
+        }
+
+        .sub-label {
+            font-size: 0.8rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--wine);
+            opacity: 0.6;
+        }
+
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .t-box {
+            background: var(--blush);
+            padding: 18px 5px;
+            border-radius: 20px;
+            border: 1px solid rgba(195, 47, 39, 0.1);
+        }
+
+        .t-val {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--wine);
+        }
+
+        .t-label {
+            display: block;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--ruby);
+            margin-top: 4px;
+        }
+
+        /* --- CHOICE & SECRET --- */
+        .choice-box { max-width: 600px; margin: 80px auto; text-align: center; z-index: 10; position: relative; }
+        .choice-box h2 { font-family: 'Alex Brush', cursive; font-size: 4rem; color: var(--wine); margin-bottom: 20px;}
+        
+        .btn-wrap { display: flex; justify-content: center; gap: 20px; margin-top: 40px; }
+        .btn { padding: 18px 50px; border-radius: 50px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-yes { background: var(--ruby); color: white; box-shadow: 0 10px 20px rgba(195, 47, 39, 0.2); }
+        .btn-no { background: transparent; color: var(--ruby); border: 2px solid var(--ruby); }
+
+        #secret-page {
+            display: none; position: fixed; inset: 0; background: var(--blush);
+            z-index: 2000; overflow-y: auto; padding: 60px 20px; text-align: center; opacity: 0; transition: 1.5s;
+        }
+
+        .secret-h { font-family: 'Alex Brush', cursive; font-size: 4.5rem; color: var(--ruby); margin-bottom: 20px; }
+
+        /* PHOTO WALL GRID */
+        .photo-wall { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            max-width: 1000px;
+            margin: 40px auto;
+            gap: 20px; 
+            padding: 20px;
+        }
+
+        .photo-wall img { 
+            width: 100%; 
+            height: 350px; 
+            object-fit: cover; 
+            border: 10px solid white; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-wall img:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 5; }
+
+        .scratch-container { position: relative; width: 320px; height: 160px; margin: 30px auto; border-radius: 20px; overflow: hidden; border: 3px solid var(--ruby); }
+        #scratch-canvas { position: absolute; top: 0; left: 0; z-index: 2; touch-action: none; cursor: crosshair; }
+        .secret-content { position: absolute; inset: 0; background: white; display: flex; align-items: center; justify-content: center; font-family: 'Alex Brush'; font-size: 2.5rem; color: var(--ruby); }
+        
+        .music-btn { position: fixed; bottom: 30px; left: 30px; background: var(--wine); color: white; padding: 14px 28px; border-radius: 50px; cursor: pointer; z-index: 1000; border: 1px solid var(--gold); font-weight: 700; }
+        
+        .insta-btn { display: inline-block; margin-top: 50px; text-decoration: none; color: white; background: var(--wine); padding: 15px 40px; border-radius: 50px; font-weight: 700; text-transform: uppercase; }
+
+    </style>
+</head>
+<body onload="init()">
+
+    <canvas id="petal-canvas"></canvas>
+    <audio id="bgSong" loop src="song.mp3"></audio>
+    <button class="music-btn" onclick="togglePlay()">PLAY OUR SONG ❤️</button>
+
+    <div id="main-content">
+        <div class="hero">
+            <p>Our Special Archive</p>
+            <h1>Our Story<br>Valentine.</h1>
+        </div>
+
+        <div class="timeline">
+            <div class="chapter-card">
+                <h3>Chapter 1: The Love</h3>
+                <p class="sub-label">Jan 26 — July 11, 2025</p>
+                <div class="timer-grid">
+                    <div class="t-box"><span class="t-val">532</span><span class="t-label">Days</span></div>
+                    <div class="t-box"><span class="t-val">00</span><span class="t-label">Hrs</span></div>
+                    <div class="t-box"><span class="t-val">00</span><span class="t-label">Min</span></div>
+                    <div class="t-box"><span class="t-val">00</span><span class="t-label">Sec</span></div>
+                </div>
+            </div>
+
+            <div class="chapter-card">
+                <h3>Chapter 2: The Distance</h3>
+                <p class="sub-label">July 11, 2025 - Feb 13, 2026</p>
+                <div class="timer-grid">
+                    <div class="t-box"><span class="t-val">217</span><span class="t-label">Days</span></div>
+                    <div class="t-box"><span class="t-val">00</span><span class="t-label">Hrs</span></div>
+                    <div class="t-box"><span class="t-val">00</span><span class="t-label">Min</span></div>
+                    <div class="t-box"><span class="t-val">00</span><span class="t-label">Sec</span></div>
+                </div>
+            </div>
+
+            <div class="chapter-card">
+                <h3>Chapter 3: The New Us</h3>
+                <p class="sub-label">Restarts Feb 14, 2026</p>
+                <div class="timer-grid">
+                    <div class="t-box"><span id="days" class="t-val">0</span><span class="t-label">Days</span></div>
+                    <div class="t-box"><span id="hours" class="t-val">00</span><span class="t-label">Hrs</span></div>
+                    <div class="t-box"><span id="minutes" class="t-val">00</span><span class="t-label">Min</span></div>
+                    <div class="t-box"><span id="seconds" class="t-val">00</span><span class="t-label">Sec</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="choice-box">
+            <h2>Forever' us ♾️</h2>
+            <div class="scratch-container">
+                <div class="secret-content">Restarts Now 🫶</div>
+                <canvas id="scratch-canvas" width="320" height="160"></canvas>
+            </div>
+            <div class="btn-wrap">
+                <button class="btn btn-yes" onclick="revealSecret()">YES</button>
+                <button class="btn btn-no" id="noBtn" onmouseover="moveNo()">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="secret-page">
+        <h2 class="secret-h">My Only Wish</h2>
+        <p style="font-family: 'Lora'; font-style: italic; color: var(--wine); max-width: 600px; margin: 0 auto; font-size: 1.2rem;">“Loving you is my favorite part of every day. No matter what happens, knowing you’re mine brings me peace, happiness, and a kind of warmth I can’t explain. You’re not just my girlfriend — you’re my safe place, my smile, and the best thing that’s ever happened to me.” ❤️. ❤️</p>
+        
+        <div class="photo-wall">
+            <img src="https://media.discordapp.net/attachments/1469712671980126419/1473617560913055766/IMG-20260218-WA0008.jpg?ex=6996dccd&is=69958b4d&hm=f89991f96bee833f775b58ea30920526a61abe0b95133da1b320d5a431d77bcc&=&format=webp&width=327&height=579" style="--r: -3deg">
+            
+            <img src="https://media.discordapp.net/attachments/1469712671980126419/1473617865377845259/IMG-20260218-WA0010.jpg?ex=6996dd15&is=69958b95&hm=2ef553dc0e2d4157f13a6003484273afb7c549c9b64b2df9a9c583050e0ab7ba&=&format=webp&width=325&height=579" style="--r: 3deg">
+            
+            <img src="https://media.discordapp.net/attachments/1469712671980126419/1473618120991309969/IMG-20260218-WA0009.jpg?ex=6996dd52&is=69958bd2&hm=fed50bab1d33daad089c08e755e67481695d935ca8b5b87feda6e2e3ee10f86c&=&format=webp&width=268&height=579" style="--r: -2deg">
+            
+            <img src="https://media.discordapp.net/attachments/1469712671980126419/1473619581586243678/IMG-20260218-WA0011.jpg?ex=6996deae&is=69958d2e&hm=e5012f6ab317cc65c8ca453adfbd53ab5dbe084f0c8e8a436998c303a8f4c00a&=&format=webp&width=197&height=350" style="--r: 2deg" alt="Add your 4th photo link here">
+        </div>
+
+        <a href="https://www.instagram.com/__rithxx___?igsh=NmtvMDUzaDY2am45" target="_blank" class="insta-btn">Connect ❤️</a>
+    </div>
+
+    <script>
+        function updateChapter3Timer() {
+            const start = new Date("Feb 14, 2026 00:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = now - start;
+            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }
+
+        function init() {
+            setInterval(updateChapter3Timer, 1000);
+            updateChapter3Timer();
+            
+            const canvas = document.getElementById('scratch-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#c32f27'; ctx.fillRect(0, 0, 320, 160);
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 14px Nunito'; ctx.textAlign = 'center'; ctx.fillText('SCRATCH WITH LOVE', 160, 85);
+            
+            let isDrawing = false;
+            function scratch(e) {
+                if (!isDrawing) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath(); ctx.arc(x, y, 25, 0, Math.PI * 2); ctx.fill();
+            }
+            canvas.onmousedown = () => isDrawing = true; window.onmouseup = () => isDrawing = false; canvas.onmousemove = scratch;
+            canvas.ontouchstart = () => isDrawing = true; canvas.ontouchmove = (e) => { e.preventDefault(); scratch(e); };
+
+            drawPetals();
+        }
+
+        function revealSecret() {
+            document.getElementById('main-content').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('main-content').style.display = 'none';
+                document.getElementById('secret-page').style.display = 'block';
+                window.scrollTo(0, 0);
+                setTimeout(() => { document.getElementById('secret-page').style.opacity = '1'; }, 100);
+            }, 1000);
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('noBtn');
+            btn.style.position = 'fixed';
+            btn.style.left = Math.random() * (window.innerWidth - 150) + 'px';
+            btn.style.top = Math.random() * (window.innerHeight - 80) + 'px';
+        }
+
+        const pCanvas = document.getElementById('petal-canvas');
+        const pCtx = pCanvas.getContext('2d');
+        pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight;
+        let petals = [];
+        const colors = ['#ffccd5', '#ffb3c1', '#c32f27', '#ff4d6d'];
+        function drawPetals() {
+            pCtx.clearRect(0,0,pCanvas.width, pCanvas.height);
+            if(petals.length < 50) petals.push({ x: Math.random()*pCanvas.width, y: -20, s: Math.random()*8+4, r: Math.random()*360, v: Math.random()*2+1, c: colors[Math.floor(Math.random()*colors.length)] });
+            petals.forEach((p, i) => {
+                pCtx.save(); pCtx.translate(p.x, p.y); pCtx.rotate(p.r*Math.PI/180);
+                pCtx.fillStyle = p.c; pCtx.beginPath(); pCtx.ellipse(0, 0, p.s, p.s/2, 0, 0, 2*Math.PI); pCtx.fill(); pCtx.restore();
+                p.y += p.v; p.r += 1.2;
+                if(p.y > pCanvas.height) petals.splice(i, 1);
+            });
+            requestAnimationFrame(drawPetals);
+        }
+
+        function togglePlay() {
+            const s = document.getElementById('bgSong');
+            s.paused ? s.play() : s.pause();
+        }
+    </script>
+</body>
+</html>
+
+
